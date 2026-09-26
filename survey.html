@@ -29,8 +29,6 @@
   .progress-step .num{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
   .progress-step.active .num{background:var(--primary);color:#fff;}
   .progress-step.active{color:var(--primary);}
-  .progress-step.done .num{background:var(--green);color:#fff;}
-  .progress-step.done{color:var(--green);}
   .progress-line{width:30px;height:2px;background:var(--line);border-radius:2px;}
 
   .wrap{max-width:760px;margin:0 auto;padding:40px 24px 80px;}
@@ -67,20 +65,6 @@
   .field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0396e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:16px;padding-right:44px;}
 
   .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-
-  .location-box{padding:18px;background:#f0fdf4;border:1.5px dashed #86efac;border-radius:14px;margin-bottom:14px;}
-  .location-box.has-location{background:#ecfdf5;border-style:solid;border-color:var(--green);}
-  .location-title{font-size:13px;font-weight:700;color:#166534;display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-  .location-title::before{content:"📍";font-size:15px;}
-  .location-data{display:none;font-family:'Inter',monospace;font-size:13px;color:var(--ink);background:var(--paper);padding:12px 14px;border-radius:10px;border:1px solid #bbf7d0;line-height:1.7;}
-  .location-box.has-location .location-data{display:block;}
-  .location-data strong{color:var(--green);font-weight:700;}
-
-  .location-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;}
-  .location-btn:hover{background:var(--primary-dark);}
-  .location-btn:disabled{background:#d8c8c0;cursor:not-allowed;}
-  .location-btn.loading{background:var(--amber);}
-  .location-btn.done{background:var(--green);}
 
   .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
   .photo-btn{padding:24px 16px;background:#fdfaf6;border:1.5px dashed var(--line);border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:inherit;color:var(--ink);transition:all .2s;}
@@ -132,7 +116,7 @@
   @media (max-width:900px){
     .nav{padding:14px 20px;}
     .brand-name{font-size:15px;}
-    .progress-bar{padding:12px 16px;top:65px;gap:6px;overflow-x:auto;}
+    .progress-bar{padding:12px 16px;top:65px;gap:6px;}
     .progress-step{font-size:11px;gap:5px;}
     .progress-step .num{width:20px;height:20px;font-size:10px;}
     .progress-line{width:16px;}
@@ -161,9 +145,9 @@
 <div class="progress-bar">
   <div class="progress-step active" id="step1"><div class="num">1</div><span>তথ্য</span></div>
   <div class="progress-line"></div>
-  <div class="progress-step" id="step2"><div class="num">2</div><span>লোকেশন</span></div>
+  <div class="progress-step active" id="step2"><div class="num">2</div><span>ছবি</span></div>
   <div class="progress-line"></div>
-  <div class="progress-step" id="step3"><div class="num">3</div><span>ছবি</span></div>
+  <div class="progress-step" id="step3"><div class="num">3</div><span>সাবমিট</span></div>
 </div>
 
 <div class="wrap">
@@ -287,30 +271,6 @@
     <div class="section">
       <div class="section-head">
         <div class="section-num">০৩</div>
-        <div class="section-head-text">
-          <h3>দোকানের GPS লোকেশন</h3>
-          <p>আপনার বর্তমান লোকেশন থেকে দোকানের অবস্থান</p>
-        </div>
-      </div>
-
-      <div class="location-box" id="locationBox">
-        <div class="location-title">বর্তমান লোকেশন</div>
-        <div class="location-data" id="locationData">
-          <div>📍 <strong>Latitude:</strong> <span id="latVal">—</span></div>
-          <div>📍 <strong>Longitude:</strong> <span id="lonVal">—</span></div>
-          <div>🎯 <strong>Accuracy:</strong> <span id="accVal">—</span></div>
-          <div>🏠 <strong>ঠিকানা:</strong> <span id="revAddr">—</span></div>
-        </div>
-      </div>
-
-      <button type="button" class="location-btn" id="btnLocation">
-        📍 আমার লোকেশন নিন
-      </button>
-    </div>
-
-    <div class="section">
-      <div class="section-head">
-        <div class="section-num">০৪</div>
         <div class="section-head-text">
           <h3>দোকানের ছবি</h3>
           <p>ক্যামেরা দিয়ে তুলুন অথবা ফাইল থেকে আপলোড করুন (সর্বোচ্চ ৫টি)</p>
