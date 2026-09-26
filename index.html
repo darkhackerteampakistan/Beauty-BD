@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeautyBD — কসমেটিক্স প্রোডাক্ট সার্ভে ২০২৬</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#fffbf6;--paper:#fff;--ink:#2a1a14;--muted:#8a7468;
+    --line:#f0e5d8;--line-2:#f8f0e5;
+    --primary:#e0396e;--primary-dark:#c22a5a;--primary-soft:#fdeef4;
+    --gold:#d4a55a;--green:#10b981;--amber:#f59e0b;
+  }
+  html,body{height:100%;}
+  body{
+    font-family:'Hind Siliguri','Inter',sans-serif;
+    background:var(--bg);color:var(--ink);
+    min-height:100vh;overflow-x:hidden;
+  }
+
+  /* top announcement */
+  .topbar{
+    background:var(--ink);color:#fff;
+    padding:10px 24px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12.5px;
+  }
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--green);box-shadow:0 0 10px var(--green);
+    animation:blink 1.4s infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .topbar-right{display:flex;gap:20px;opacity:.85;}
+  .topbar a{color:inherit;text-decoration:none;}
+
+  /* nav */
+  .nav{
+    padding:18px 40px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--paper);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand-mark{
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(135deg,var(--primary),var(--gold));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:18px;font-weight:700;
+    box-shadow:0 6px 18px rgba(224,57,110,0.25);
+  }
+  .brand-info .bn{font-size:18px;font-weight:700;letter-spacing:-0.02em;line-height:1.1;}
+  .brand-info .bs{font-size:11px;color:var(--muted);letter-spacing:0.05em;margin-top:2px;}
+
+  .nav-links{display:flex;gap:30px;font-size:14.5px;font-weight:500;color:var(--muted);}
+  .nav-links a{color:inherit;text-decoration:none;transition:color .2s;}
+  .nav-links a:hover{color:var(--primary);}
+
+  .nav-cta{
+    padding:10px 22px;background:var(--primary);color:#fff;
+    font-family:inherit;font-size:13.5px;font-weight:600;
+    border-radius:10px;text-decoration:none;
+    box-shadow:0 6px 16px rgba(224,57,110,0.25);
+    transition:all .2s;
+  }
+  .nav-cta:hover{background:var(--primary-dark);transform:translateY(-1px);}
+
+  /* hero */
+  .hero{
+    max-width:1200px;margin:0 auto;
+    padding:64px 40px 60px;
+    display:grid;grid-template-columns:1.05fr 0.95fr;
+    gap:60px;align-items:center;
+  }
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:8px 16px;
+    background:var(--primary-soft);color:var(--primary);
+    border-radius:999px;font-size:13px;font-weight:600;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{content:"✦";}
+
+  h1{
+    font-size:56px;font-weight:700;
+    line-height:1.08;letter-spacing:-0.03em;
+    margin-bottom:22px;color:var(--ink);
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(135deg,var(--primary),var(--gold));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+
+  .lead{
+    font-size:17px;line-height:1.75;color:var(--muted);
+    max-width:520px;margin-bottom:34px;
+  }
+
+  .actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:16px 30px;
+    background:var(--primary);color:#fff;
+    font-family:inherit;font-size:15px;font-weight:600;
+    border-radius:12px;text-decoration:none;
+    box-shadow:0 10px 26px rgba(224,57,110,0.3);
+    transition:all .25s;
+  }
+  .btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px);}
+  .btn-primary .arrow{transition:transform .25s;}
+  .btn-primary:hover .arrow{transform:translateX(3px);}
+
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:16px 24px;
+    background:transparent;color:var(--ink);
+    border:1.5px solid var(--line);
+    border-radius:12px;text-decoration:none;
+    font-size:15px;font-weight:500;
+    transition:all .2s;
+  }
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
+
+  /* stats row */
+  .stats-row{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:24px;margin-top:52px;
+    padding-top:32px;border-top:1px solid var(--line);
+  }
+  .stat .num{font-size:34px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);line-height:1;}
+  .stat .num em{color:var(--primary);font-style:normal;}
+  .stat .lbl{font-size:12.5px;color:var(--muted);margin-top:8px;font-weight:500;}
+
+  /* right visual - card preview */
+  .visual{position:relative;display:flex;justify-content:center;align-items:center;min-height:600px;}
+
+  .preview-card{
+    width:100%;max-width:420px;
+    background:var(--paper);border-radius:24px;
+    box-shadow:0 40px 90px rgba(42,26,20,0.10);
+    overflow:hidden;position:relative;
+    transform:rotate(-1.5deg);
+  }
+  .preview-card::before{
+    content:"";position:absolute;
+    top:0;left:0;right:0;height:6px;
+    background:linear-gradient(90deg,var(--primary),var(--gold));
+  }
+
+  .preview-head{
+    padding:26px 26px 20px;
+    border-bottom:1px solid var(--line-2);
+  }
+  .preview-head .tag{
+    font-size:11px;font-weight:700;
+    letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--primary);margin-bottom:14px;
+  }
+  .preview-head h3{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.2;}
+
+  .preview-list{padding:16px 26px 24px;}
+  .preview-item{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--line-2);
+    font-size:13.5px;
+  }
+  .preview-item:last-child{border-bottom:none;}
+  .preview-item .ic{
+    width:30px;height:30px;border-radius:9px;
+    background:var(--primary-soft);color:var(--primary);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .preview-item .lbl{color:var(--muted);font-weight:500;}
+  .preview-item .val{margin-left:auto;font-weight:600;color:var(--ink);}
+
+  .preview-foot{
+    padding:16px 26px 22px;
+    background:#fdf6f9;
+    font-size:12.5px;color:var(--primary);
+    font-weight:600;letter-spacing:0.02em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .preview-foot::before{
+    content:"";width:6px;height:6px;border-radius:50%;
+    background:var(--primary);box-shadow:0 0 8px var(--primary);
+    animation:blink 1.4s infinite;
+  }
+
+  /* benefits section */
+  .benefits{
+    max-width:1200px;margin:0 auto;
+    padding:40px 40px 80px;
+  }
+  .benefits-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:36px;padding-bottom:20px;
+    border-bottom:1px solid var(--line);
+  }
+  .benefits-head h2{
+    font-size:30px;font-weight:700;letter-spacing:-0.02em;
+  }
+  .benefits-head h2 span{color:var(--primary);}
+  .benefits-head p{font-size:14px;color:var(--muted);max-width:400px;text-align:right;}
+
+  .benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .benefit-card{
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;padding:28px 24px;
+    transition:all .25s;
+  }
+  .benefit-card:hover{
+    border-color:var(--primary);
+    transform:translateY(-4px);
+    box-shadow:0 20px 40px rgba(224,57,110,0.08);
+  }
+  .benefit-card .ico{
+    width:52px;height:52px;border-radius:15px;
+    background:var(--primary-soft);color:var(--primary);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;margin-bottom:18px;
+  }
+  .benefit-card h4{font-size:16.5px;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em;}
+  .benefit-card p{font-size:14px;line-height:1.7;color:var(--muted);}
+
+  /* footer */
+  .footer{
+    background:var(--ink);color:#fff;
+    padding:36px 40px 28px;
+  }
+  .footer-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:20px;
+  }
+  .footer-brand{font-size:18px;font-weight:700;letter-spacing:-0.01em;}
+  .footer-brand span{color:var(--primary);}
+  .footer-links{display:flex;gap:24px;font-size:13px;opacity:.85;}
+  .footer-links a{color:inherit;text-decoration:none;}
+  .footer-links a:hover{color:var(--primary);}
+  .footer-bottom{
+    max-width:1200px;margin:20px auto 0;
+    padding-top:20px;border-top:1px solid rgba(255,255,255,0.12);
+    font-size:12px;opacity:.55;text-align:center;
+  }
+
+  @media (max-width:900px){
+    .topbar{padding:8px 16px;font-size:11px;}
+    .topbar-right{display:none;}
+    .nav{padding:14px 20px;}
+    .nav-links{display:none;}
+    .nav-cta{padding:8px 16px;font-size:12.5px;}
+    .hero{grid-template-columns:1fr;padding:44px 22px 50px;gap:44px;}
+    h1{font-size:38px;}
+    .lead{font-size:15.5px;}
+    .stats-row{grid-template-columns:1fr;gap:18px;margin-top:36px;}
+    .benefits{padding:30px 22px 60px;}
+    .benefits-head{flex-direction:column;align-items:flex-start;gap:10px;}
+    .benefits-head h2{font-size:22px;}
+    .benefits-head p{text-align:left;}
+    .benefit-grid{grid-template-columns:1fr;}
+    .footer{padding:26px 22px;}
+    .footer-inner{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-dot"></span>
+    <span>সার্ভে চলছে · ২০২৬</span>
+  </div>
+  <div class="topbar-right">
+    <span>📞 +880 1234 567890</span>
+    <a href="#">বাংলা</a>
+    <a href="#">EN</a>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="brand">
+    <div class="brand-mark">ব</div>
+    <div class="brand-info">
+      <div class="bn">Beauty<span style="color:var(--primary)">BD</span></div>
+      <div class="bs">কসমেটিক্স প্রোডাক্ট সার্ভে</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#">কেন দেবেন</a>
+    <a href="#">কিভাবে</a>
+    <a href="#">প্রশ্ন</a>
+  </div>
+  <a class="nav-cta" href="survey.html">সার্ভে শুরু করুন</a>
+</nav>
+
+<main class="hero">
+  <section>
+    <div class="eyebrow">অফিসিয়াল কসমেটিক্স সার্ভে ২০২৬</div>
+    <h1>
+      আপনার দোকানের তথ্য<br>
+      আমাদের সাথে <em>শেয়ার করুন</em>
+    </h1>
+    <p class="lead">
+      আমরা বাংলাদেশের সমস্ত কসমেটিক্স ও পারফিউম বিক্রেতাদের তথ্য সংগ্রহ করছি।
+      আপনার দোকানের নাম, লোকেশন, ছবি — সব তথ্য দিন। সম্পূর্ণ বিনামূল্যে এবং
+      তথ্য গোপন রাখা হবে।
+    </p>
+    <div class="actions">
+      <a class="btn-primary" href="survey.html">
+        সার্ভে শুরু করুন
+        <span class="arrow">→</span>
+      </a>
+      <a class="btn-ghost" href="#">আরো জানুন</a>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="num">2<em>মিনিট</em></div><div class="lbl">সময় লাগবে</div></div>
+      <div class="stat"><div class="num">100<em>%</em></div><div class="lbl">ফ্রি</div></div>
+      <div class="stat"><div class="num">64<em>জেলা</em></div><div class="lbl">সারাদেশে</div></div>
+    </div>
+  </section>
+
+  <section class="visual">
+    <div class="preview-card">
+      <div class="preview-head">
+        <div class="tag">যা যা সংগ্রহ করা হবে</div>
+        <h3>আপনার দোকানের তথ্য</h3>
+      </div>
+      <div class="preview-list">
+        <div class="preview-item"><div class="ic">👤</div><div class="lbl">মালিকের নাম</div></div>
+        <div class="preview-item"><div class="ic">🏪</div><div class="lbl">দোকানের নাম</div></div>
+        <div class="preview-item"><div class="ic">📱</div><div class="lbl">ফোন নম্বর</div></div>
+        <div class="preview-item"><div class="ic">📧</div><div class="lbl">জিমেইল</div></div>
+        <div class="preview-item"><div class="ic">📍</div><div class="lbl">GPS লোকেশন</div></div>
+        <div class="preview-item"><div class="ic">📸</div><div class="lbl">দোকানের ছবি</div></div>
+      </div>
+      <div class="preview-foot">সব তথ্য সুরক্ষিত ও গোপন</div>
+    </div>
+  </section>
+</main>
+
+<section class="benefits">
+  <div class="benefits-head">
+    <h2>কেন <span>দেবেন</span>?</h2>
+    <p>আপনার তথ্য আমাদের কাছে গোপন থাকবে — শুধু ব্যবসায়িক যোগাযোগের জন্য ব্যবহার হবে।</p>
+  </div>
+
+  <div class="benefit-grid">
+    <div class="benefit-card">
+      <div class="ico">🎁</div>
+      <h4>সম্পূর্ণ ফ্রি</h4>
+      <p>সার্ভে দিতে কোনো টাকা লাগবে না। সম্পূর্ণ বিনামূল্যে আপনার তথ্য দিন।</p>
+    </div>
+    <div class="benefit-card">
+      <div class="ico">🔒</div>
+      <h4>নিরাপদ ও গোপন</h4>
+      <p>আপনার ফোন, জিমেইল, লোকেশন — সব তথ্য এনক্রিপ্টেড ও সুরক্ষিত।</p>
+    </div>
+    <div class="benefit-card">
+      <div class="ico">📈</div>
+      <h4>ব্যবসার সুযোগ</h4>
+      <p>ভবিষ্যতে আমাদের পার্টনার ব্র্যান্ডের সাথে ব্যবসায়িক সুযোগ পাবেন।</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">Beauty<span>BD</span> সার্ভে ২০২৬</div>
+    <div class="footer-links">
+      <a href="#">প্রাইভেসি</a>
+      <a href="#">শর্তাবলী</a>
+      <a href="#">যোগাযোগ</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© ২০২৬ BeautyBD · সর্বস্বত্ব সংরক্ষিত</div>
+</footer>
+
+</body>
+</html>
