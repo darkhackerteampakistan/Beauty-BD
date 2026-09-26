@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeautyBD — সার্ভে ফর্ম</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+  window.__recaptchaReady = false;
+  window.onRecaptchaLoad = function () {
+    window.__recaptchaReady = true;
+    if (window.__tryRenderRecaptcha) window.__tryRenderRecaptcha();
+  };
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
+
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#fffbf6;--paper:#fff;--ink:#2a1a14;--muted:#8a7468;
+    --line:#f0e5d8;--line-2:#f8f0e5;
+    --primary:#e0396e;--primary-dark:#c22a5a;--primary-soft:#fdeef4;
+    --gold:#d4a55a;--green:#10b981;--amber:#f59e0b;--red:#dc2626;
+  }
+  html,body{height:100%;}
+  body{
+    font-family:'Hind Siliguri','Inter',sans-serif;
+    background:var(--bg);color:var(--ink);
+    min-height:100vh;overflow-x:hidden;
+  }
+
+  /* nav */
+  .nav{
+    padding:16px 32px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--paper);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand-mark{
+    width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,var(--primary),var(--gold));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:16px;font-weight:700;
+  }
+  .brand-name{font-size:17px;font-weight:700;letter-spacing:-0.02em;}
+  .brand-name span{color:var(--primary);}
+  .back{font-size:13.5px;color:var(--muted);text-decoration:none;font-weight:500;}
+  .back:hover{color:var(--primary);}
+
+  /* progress bar */
+  .progress-bar{
+    background:var(--paper);border-bottom:1px solid var(--line);
+    padding:14px 32px;
+    display:flex;justify-content:center;align-items:center;gap:12px;
+    position:sticky;top:69px;z-index:49;
+  }
+  .progress-step{
+    display:flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:600;color:var(--muted);
+  }
+  .progress-step .num{
+    width:24px;height:24px;border-radius:50%;
+    background:var(--line);color:var(--muted);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;
+  }
+  .progress-step.active .num{background:var(--primary);color:#fff;}
+  .progress-step.active{color:var(--primary);}
+  .progress-step.done .num{background:var(--green);color:#fff;}
+  .progress-step.done{color:var(--green);}
+  .progress-line{width:30px;height:2px;background:var(--line);border-radius:2px;}
+
+  /* main */
+  .wrap{max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+  .head{margin-bottom:32px;text-align:center;}
+  .head h1{font-size:34px;font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:10px;}
+  .head h1 span{color:var(--primary);}
+  .head p{font-size:15px;color:var(--muted);line-height:1.6;}
+
+  /* section */
+  .section{
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;padding:28px 28px 24px;
+    margin-bottom:20px;
+    transition:all .25s;
+  }
+  .section-head{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:22px;padding-bottom:16px;
+    border-bottom:1px solid var(--line-2);
+  }
+  .section-num{
+    width:36px;height:36px;border-radius:11px;
+    background:var(--primary-soft);color:var(--primary);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:700;flex-shrink:0;
+  }
+  .section-head-text h3{font-size:17px;font-weight:700;letter-spacing:-0.01em;line-height:1.2;}
+  .section-head-text p{font-size:12.5px;color:var(--muted);margin-top:3px;}
+
+  /* fields */
+  .field{margin-bottom:20px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:block;font-size:13.5px;font-weight:600;
+    color:var(--ink);margin-bottom:8px;
+  }
+  .field label .req{color:var(--red);margin-left:2px;}
+  .field label .hint{color:var(--muted);font-weight:400;font-size:12px;margin-left:6px;}
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field input[type="number"],
+  .field select,
+  .field textarea{
+    width:100%;padding:14px 16px;
+    background:#fdfaf6;
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    font-family:inherit;font-size:15px;
+    color:var(--ink);
+    transition:all .2s;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder{color:#b8a89e;}
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus{
+    outline:none;border-color:var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(224,57,110,0.08);
+  }
+  .field textarea{resize:vertical;min-height:90px;line-height:1.6;}
+  .field select{
+    cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0396e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 16px center;background-size:16px;
+    padding-right:44px;
+  }
+
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+  /* location field */
+  .location-box{
+    padding:18px;background:#f0fdf4;
+    border:1.5px dashed #86efac;border-radius:14px;
+    margin-bottom:14px;
+  }
+  .location-box.has-location{background:#ecfdf5;border-style:solid;border-color:var(--green);}
+  .location-title{
+    font-size:13px;font-weight:700;color:#166534;
+    display:flex;align-items:center;gap:8px;margin-bottom:12px;
+  }
+  .location-title::before{content:"📍";font-size:15px;}
+  .location-data{
+    display:none;
+    font-family:'Inter',monospace;
+    font-size:13px;color:var(--ink);
+    background:var(--paper);padding:12px 14px;
+    border-radius:10px;border:1px solid #bbf7d0;
+    line-height:1.7;
+  }
+  .location-box.has-location .location-data{display:block;}
+  .location-data strong{color:var(--green);font-weight:700;}
+
+  .location-btn{
+    width:100%;padding:14px;
+    background:var(--primary);color:#fff;
+    border:none;border-radius:12px;
+    font-family:inherit;font-size:14.5px;font-weight:600;
+    cursor:pointer;transition:all .2s;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-top:12px;
+  }
+  .location-btn:hover{background:var(--primary-dark);}
+  .location-btn:disabled{background:#d8c8c0;cursor:not-allowed;}
+  .location-btn.loading{background:var(--amber);}
+  .location-btn.done{background:var(--green);}
+
+  /* photo section */
+  .photo-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+    margin-bottom:16px;
+  }
+  .photo-btn{
+    padding:24px 16px;
+    background:#fdfaf6;border:1.5px dashed var(--line);
+    border-radius:14px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    font-family:inherit;color:var(--ink);
+    transition:all .2s;
+  }
+  .photo-btn:hover{border-color:var(--primary);background:var(--primary-soft);}
+  .photo-btn .p-icon{font-size:26px;}
+  .photo-btn .p-label{font-size:13.5px;font-weight:600;}
+  .photo-btn .p-sub{font-size:11.5px;color:var(--muted);}
+
+  /* photo previews */
+  .photo-previews{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+    margin-top:14px;
+  }
+  .photo-thumb{
+    position:relative;aspect-ratio:1;
+    border-radius:12px;overflow:hidden;
+    border:1.5px solid var(--line);
+    background:#000;
+  }
+  .photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-thumb .rm{
+    position:absolute;top:6px;right:6px;
+    width:26px;height:26px;border-radius:50%;
+    background:rgba(0,0,0,0.75);color:#fff;
+    border:none;cursor:pointer;font-size:12px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .photo-thumb .rm:hover{background:var(--red);}
+
+  .photo-count{
+    font-size:12.5px;color:var(--muted);
+    margin-top:10px;text-align:center;
+  }
+  .photo-count strong{color:var(--primary);font-weight:700;}
+
+  /* captcha */
+  .captcha-wrap{
+    padding:22px;background:var(--paper);
+    border:1px solid var(--line);border-radius:14px;
+    display:flex;justify-content:center;margin:20px 0;
+  }
+  #recaptchaWidget{display:inline-block;max-width:100%;}
+
+  /* submit */
+  .submit{
+    width:100%;padding:18px;
+    background:var(--primary);color:#fff;
+    font-family:inherit;font-size:16px;font-weight:700;
+    letter-spacing:0.01em;
+    border:none;border-radius:14px;
+    cursor:pointer;transition:all .25s;
+    box-shadow:0 10px 26px rgba(224,57,110,0.3);
+  }
+  .submit:hover:not(:disabled){
+    background:var(--primary-dark);
+    transform:translateY(-2px);
+    box-shadow:0 14px 32px rgba(224,57,110,0.4);
+  }
+  .submit:disabled{
+    background:#d8c8c0;cursor:not-allowed;box-shadow:none;
+  }
+
+  .status{
+    margin-top:16px;padding:16px;
+    border-radius:12px;font-size:14px;font-weight:600;
+    text-align:center;display:none;
+  }
+  .status.show{display:block;}
+  .status.info{background:#eef2ff;color:#4338ca;}
+  .status.ok{background:#ecfdf5;color:#059669;}
+  .status.err{background:#fef2f2;color:#dc2626;}
+
+  /* camera modal */
+  .cam-modal{
+    display:none;position:fixed;inset:0;z-index:100;
+    background:rgba(20,10,5,0.92);
+    align-items:center;justify-content:center;padding:20px;
+  }
+  .cam-modal.open{display:flex;}
+  .cam-inner{
+    width:100%;max-width:520px;
+    background:var(--paper);border-radius:20px;overflow:hidden;
+  }
+  .cam-head{
+    padding:18px 22px;
+    display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid var(--line);
+  }
+  .cam-head h4{font-size:16px;font-weight:700;}
+  .cam-close{
+    width:34px;height:34px;border-radius:50%;
+    background:#f4f0ec;border:none;cursor:pointer;
+    font-size:15px;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cam-close:hover{background:var(--red);color:#fff;}
+  .cam-stage{position:relative;aspect-ratio:4/3;background:#000;overflow:hidden;}
+  #cameraVideo{width:100%;height:100%;object-fit:cover;}
+  .cam-guide{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:none;
+  }
+  .guide-inner{
+    width:80%;height:70%;
+    border:2px dashed rgba(255,255,255,0.5);
+    border-radius:16px;position:relative;
+  }
+  .guide-inner::before{
+    content:"ছবি এই ফ্রেমের মধ্যে রাখুন";
+    position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+    font-size:12px;color:rgba(255,255,255,0.85);
+    white-space:nowrap;font-weight:500;
+    background:rgba(0,0,0,0.5);padding:4px 12px;border-radius:6px;
+  }
+  .cam-count{
+    position:absolute;inset:0;
+    display:none;align-items:center;justify-content:center;
+    font-size:120px;font-weight:800;color:#fff;
+    text-shadow:0 0 40px var(--primary);
+    background:rgba(0,0,0,0.4);
+  }
+  .cam-count.show{display:flex;}
+  .cam-foot{padding:16px 22px;display:flex;gap:10px;}
+  .cam-btn{
+    flex:1;padding:14px;
+    font-family:inherit;font-size:14px;font-weight:600;
+    border:none;border-radius:12px;cursor:pointer;
+    transition:all .2s;
+  }
+  .cam-btn.primary{background:var(--primary);color:#fff;}
+  .cam-btn.primary:hover{background:var(--primary-dark);}
+  .cam-btn.ghost{background:#f4f0ec;color:var(--ink);}
+  .cam-btn.ghost:hover{background:#e8e0d8;}
+
+  @media (max-width:900px){
+    .nav{padding:14px 20px;}
+    .brand-name{font-size:15px;}
+    .progress-bar{padding:12px 16px;top:65px;gap:6px;overflow-x:auto;}
+    .progress-step{font-size:11px;gap:5px;}
+    .progress-step .num{width:20px;height:20px;font-size:10px;}
+    .progress-line{width:16px;}
+    .wrap{padding:24px 16px 60px;}
+    .head h1{font-size:24px;}
+    .head p{font-size:14px;}
+    .section{padding:22px 18px 18px;border-radius:14px;}
+    .section-head-text h3{font-size:15px;}
+    .section-head-text p{font-size:11.5px;}
+    .field-row{grid-template-columns:1fr;}
+    .photo-grid{grid-template-columns:1fr;}
+    .photo-previews{grid-template-columns:repeat(2,1fr);}
+    #recaptchaWidget{transform:scale(0.85);transform-origin:top left;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">
+    <div class="brand-mark">ব</div>
+    <div class="brand-name">Beauty<span>BD</span> সার্ভে</div>
+  </div>
+  <a class="back" href="index.html">← হোম</a>
+</nav>
+
+<div class="progress-bar">
+  <div class="progress-step active" id="step1"><div class="num">1</div><span>তথ্য</span></div>
+  <div class="progress-line"></div>
+  <div class="progress-step" id="step2"><div class="num">2</div><span>লোকেশন</span></div>
+  <div class="progress-line"></div>
+  <div class="progress-step" id="step3"><div class="num">3</div><span>ছবি</span></div>
+</div>
+
+<div class="wrap">
+
+  <div class="head">
+    <h1>আপনার দোকানের <span>তথ্য দিন</span></h1>
+    <p>সব তথ্য পূরণ করুন। যতগুলো তারকাচিহ্ন (*) আছে সেগুলো অবশ্যই দিতে হবে।</p>
+  </div>
+
+  <form id="surveyForm" novalidate>
+
+    <!-- SECTION 1: Basic Info -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">০১</div>
+        <div class="section-head-text">
+          <h3>ব্যক্তিগত তথ্য</h3>
+          <p>আপনার এবং দোকানের মৌলিক তথ্য</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>মালিকের পূর্ণ নাম <span class="req">*</span></label>
+        <input type="text" id="ownerName" placeholder="যেমন: মোহাম্মদ রফিকুল ইসলাম" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label>দোকানের নাম <span class="req">*</span></label>
+        <input type="text" id="shopName" placeholder="যেমন: রফিক কসমেটিক্স সেন্টার">
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>মোবাইল নম্বর <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="01XXXXXXXXX" autocomplete="tel">
+        </div>
+        <div class="field">
+          <label>জিমেইল <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="example@gmail.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>বিভাগ <span class="req">*</span></label>
+          <select id="division">
+            <option value="">নির্বাচন করুন</option>
+            <option>ঢাকা</option>
+            <option>চট্টগ্রাম</option>
+            <option>রাজশাহী</option>
+            <option>খুলনা</option>
+            <option>বরিশাল</option>
+            <option>সিলেট</option>
+            <option>রংপুর</option>
+            <option>ময়মনসিংহ</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>জেলা/শহর <span class="req">*</span></label>
+          <input type="text" id="district" placeholder="যেমন: ঢাকা">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>সম্পূর্ণ ঠিকানা <span class="req">*</span></label>
+        <textarea id="address" placeholder="বাসা/দোকান নম্বর, রাস্তা, এলাকা..." rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Business -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">০২</div>
+        <div class="section-head-text">
+          <h3>ব্যবসার তথ্য</h3>
+          <p>আপনার ব্যবসা সম্পর্কে</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>ব্যবসার ধরন <span class="req">*</span></label>
+        <select id="businessType">
+          <option value="">নির্বাচন করুন</option>
+          <option>পাইকারি (Wholesale)</option>
+          <option>খুচরা (Retail)</option>
+          <option>অনলাইন (Online)</option>
+          <option>পাইকারি + খুচরা</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>দোকানের ধরন <span class="req">*</span></label>
+        <select id="shopType">
+          <option value="">নির্বাচন করুন</option>
+          <option>কসমেটিক্স (Cosmetics)</option>
+          <option>পারফিউম (Perfume)</option>
+          <option>স্কিনকেয়ার (Skincare)</option>
+          <option>হেয়ার কেয়ার (Hair Care)</option>
+          <option>সব ধরনের বিউটি প্রোডাক্ট</option>
+          <option>অন্যান্য</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>কত বছর ধরে ব্যবসা করছেন <span class="req">*</span></label>
+          <input type="number" id="yearsBusiness" placeholder="যেমন: ৫" min="0" max="80">
+        </div>
+        <div class="field">
+          <label>মাসিক বিক্রি (আনুমানিক) <span class="hint">(টাকায়)</span></label>
+          <select id="monthlySale">
+            <option value="">নির্বাচন করুন</option>
+            <option>৫০ হাজারের নিচে</option>
+            <option>৫০ হাজার - ১ লাখ</option>
+            <option>১ লাখ - ৩ লাখ</option>
+            <option>৩ লাখ - ১০ লাখ</option>
+            <option>১০ লাখের বেশি</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Location -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">০৩</div>
+        <div class="section-head-text">
+          <h3>দোকানের GPS লোকেশন</h3>
+          <p>আপনার বর্তমান লোকেশন থেকে দোকানের অবস্থান</p>
+        </div>
+      </div>
+
+      <div class="location-box" id="locationBox">
+        <div class="location-title">বর্তমান লোকেশন</div>
+        <div class="location-data" id="locationData">
+          <div>📍 <strong>Latitude:</strong> <span id="latVal">—</span></div>
+          <div>📍 <strong>Longitude:</strong> <span id="lonVal">—</span></div>
+          <div>🎯 <strong>Accuracy:</strong> <span id="accVal">—</span></div>
+          <div>🏠 <strong>ঠিকানা:</strong> <span id="revAddr">—</span></div>
+        </div>
+      </div>
+
+      <button type="button" class="location-btn" id="btnLocation">
+        📍 আমার লোকেশন নিন
+      </button>
+    </div>
+
+    <!-- SECTION 4: Photos -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">০৪</div>
+        <div class="section-head-text">
+          <h3>দোকানের ছবি</h3>
+          <p>ক্যামেরা দিয়ে তুলুন অথবা ফাইল থেকে আপলোড করুন (সর্বোচ্চ ৫টি)</p>
+        </div>
+      </div>
+
+      <div class="photo-grid">
+        <button type="button" class="photo-btn" id="btnCamera">
+          <span class="p-icon">📷</span>
+          <span class="p-label">ক্যামেরা</span>
+          <span class="p-sub">সরাসরি ছবি তুলুন</span>
+        </button>
+        <button type="button" class="photo-btn" id="btnUpload">
+          <span class="p-icon">📁</span>
+          <span class="p-label">ফাইল আপলোড</span>
+          <span class="p-sub">গ্যালারি থেকে</span>
+        </button>
+      </div>
+
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+
+      <div class="photo-previews" id="photoPreviews"></div>
+
+      <div class="photo-count" id="photoCount">
+        <strong>0</strong> / 5 টি ছবি যুক্ত হয়েছে
+      </div>
+    </div>
+
+    <!-- CAPTCHA -->
+    <div class="captcha-wrap">
+      <div id="recaptchaWidget"></div>
+    </div>
+
+    <button type="submit" class="submit" id="btnSubmit" disabled>
+      সার্ভে সাবমিট করুন
+    </button>
+
+    <div class="status" id="formStatus"></div>
+
+  </form>
+
+</div>
+
+<!-- CAMERA MODAL -->
+<div class="cam-modal" id="camModal">
+  <div class="cam-inner">
+    <div class="cam-head">
+      <h4>ছবি তুলুন</h4>
+      <button type="button" class="cam-close" id="camClose">✕</button>
+    </div>
+    <div class="cam-stage">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <div class="cam-guide"><div class="guide-inner"></div></div>
+      <div class="cam-count" id="camCountdown">3</div>
+    </div>
+    <div class="cam-foot">
+      <button type="button" class="cam-btn ghost" id="camCancel">বাতিল</button>
+      <button type="button" class="cam-btn primary" id="camCapture">ছবি তুলুন</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="hiddenCanvas" style="display:none;"></canvas>
+<script src="survey.js"></script>
+
+</body>
+</html>
